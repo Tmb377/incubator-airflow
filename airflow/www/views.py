@@ -843,6 +843,7 @@ class Airflow(BaseView):
     @wwwutils.action_logging
     @provide_session
     def xcom(self, session=None):
+        logging.info('Im on the xcom page!')
         dag_id = request.args.get('dag_id')
         task_id = request.args.get('task_id')
         # Carrying execution_date through, even though it's irrelevant for
