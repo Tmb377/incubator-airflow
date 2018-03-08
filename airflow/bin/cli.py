@@ -912,6 +912,7 @@ def worker(args):
 
 
 def initdb(args):  # noqa
+    print('THIS IS MY WORK')
     print("DB: " + repr(settings.engine.url))
     db_utils.initdb()
     print("Done.")
