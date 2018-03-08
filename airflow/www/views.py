@@ -29,6 +29,7 @@ import json
 import bleach
 import pendulum
 import codecs
+import pickle
 from collections import defaultdict
 
 import inspect
@@ -861,10 +862,14 @@ class Airflow(BaseView):
             XCom.dag_id == dag_id, XCom.task_id == task_id,
             XCom.execution_date == dttm).all()
 
+        enable_pickling = conf.getboolean('core', 'enable_xcom_pickling')
         attributes = []
         for xcom in xcomlist:
             if not xcom.key.startswith('_'):
-                attributes.append((xcom.key, xcom.value))
+                if enable_pickling:
+                    attributes.append((xcom.key, pickle.loads(xcom.value)))
+                else:
+                    attributes.append((xcom.key, json.loads(xcom.value.decode('UTF-8'))))
 
         title = "XCom"
         return self.render(
